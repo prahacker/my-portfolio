@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import Head from 'next/head'  // Import Head component
+import { Card, CardContent, CardHeader, CardTitle } from "/Users/prakhartripathi/portfolio/src/components/ui/card"
+import { Badge } from "/Users/prakhartripathi/portfolio/src/components/ui/badge"
+import { Button } from "/Users/prakhartripathi/portfolio/src/components/ui/button"
 import { Github, Linkedin, Mail, ChevronRight, Code, Server, Shield } from "lucide-react"
 import Image from 'next/image'
 
-export default function Portfolio() {  // <-- Default export here
+export default function Portfolio() {
   const [activeTab, setActiveTab] = useState("about")
   const [isScrolled, setIsScrolled] = useState(false)
 
@@ -97,6 +98,11 @@ export default function Portfolio() {  // <-- Default export here
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-blue-900 text-white">
+      {/* Add the Head component here to set the title */}
+      <Head>
+        <title>Prakhar&apos;s Resume</title>
+      </Head>
+
       <motion.header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-gray-900/80 backdrop-blur-md' : 'bg-transparent'}`}
         initial={{ y: -100 }}
@@ -316,3 +322,4 @@ export default function Portfolio() {  // <-- Default export here
     </div>
   )
 }
+
