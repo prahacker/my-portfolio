@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Github, Linkedin, Mail, ChevronRight, Code, Server, Shield, Menu, X } from "lucide-react"
 import Image from 'next/image'
 import Head from 'next/head'
+
 interface TimelineItemType {
   date: string;
   title?: string;
@@ -142,7 +143,7 @@ export default function Portfolio() {
   return (
     <>
       <Head>
-        <title>Prakhar | DevOps Wizard 🧙‍♂️</title>
+        <title>Prakhar | DevOps Wizard &#x1F9D9;&#x200D;&#x2642;&#xFE0F;</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-blue-900 text-white">
@@ -251,7 +252,7 @@ export default function Portfolio() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
             >
-              <h2 className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">DevOps Engineer & Cyber Security Enthusiast</h2>
+              <h2 className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">DevOps Engineer &amp; Cyber Security Enthusiast</h2>
               <p className="text-xl text-gray-400">Passionate about building secure and scalable systems</p>
             </motion.div>
 
@@ -276,7 +277,7 @@ export default function Portfolio() {
                         </CardHeader>
                         <CardContent>
                           <p className="text-gray-300 mb-4">
-                            I'm a passionate DevOps Engineer and Cyber Security Enthusiast with a strong foundation in cloud technologies and secure system design. My goal is to bridge the gap between development and operations while ensuring robust security measures are in place.
+                            I&#39;m a passionate DevOps Engineer and Cyber Security Enthusiast with a strong foundation in cloud technologies and secure system design. My goal is to bridge the gap between development and operations while ensuring robust security measures are in place.
                           </p>
                           <p className="text-gray-300">
                             With expertise in CI/CD pipelines, cloud infrastructure, and ethical hacking, I strive to create efficient, scalable, and secure solutions for modern software development challenges.
@@ -392,24 +393,23 @@ export default function Portfolio() {
       </div>
 
       <Modal isOpen={!!selectedCertificate} onClose={() => setSelectedCertificate(null)}>
-  {selectedCertificate && (
-    <div className="text-center">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">{selectedCertificate.name}</h2>
-      {selectedCertificate.image ? (
-        <Image
-          src={selectedCertificate.image}
-          alt={selectedCertificate.name || "Certificate"}
-          width={800}
-          height={600}
-          className="mx-auto"
-        />
-      ) : (
-        <p>No image available for this certificate</p>  
-      )}
-    </div>
-     )}
-    </Modal>
-
+        {selectedCertificate && (
+          <div className="text-center">
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">{selectedCertificate.name}</h2>
+            {selectedCertificate.image ? (
+              <Image
+                src={selectedCertificate.image}
+                alt={selectedCertificate.name || "Certificate"}
+                width={800}
+                height={600}
+                className="mx-auto"
+              />
+            ) : (
+              <p>No image available for this certificate</p>
+            )}
+          </div>
+        )}
+      </Modal>
     </>
   )
 }
