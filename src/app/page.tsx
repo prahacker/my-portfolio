@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Head from 'next/head'  // Import Head component
-import { Card, CardContent, CardHeader, CardTitle } from "/Users/prakhartripathi/portfolio/src/components/ui/card"
-import { Badge } from "/Users/prakhartripathi/portfolio/src/components/ui/badge"
-import { Button } from "/Users/prakhartripathi/portfolio/src/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { Github, Linkedin, Mail, ChevronRight, Code, Server, Shield } from "lucide-react"
 import Image from 'next/image'
 
