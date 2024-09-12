@@ -189,7 +189,7 @@ export default function Portfolio() {
                 </Button>
               </motion.a>
               <motion.a
-                href="https://linkedin.com/in/yourusername"
+                href="https://www.linkedin.com/in/prakhar-tripathi-1ba3651a7/"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.1 }}
@@ -201,7 +201,7 @@ export default function Portfolio() {
                 </Button>
               </motion.a>
               <motion.a
-                href="mailto:your.email@example.com"
+                href="mailto:pbpmdst@gmail.com"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
