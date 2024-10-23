@@ -71,7 +71,7 @@ export default function Portfolio() {
 
   const timelineData: { education: TimelineItemType[], experience: TimelineItemType[], certifications: TimelineItemType[] } = {
     education: [
-      { date: "Aug 2022 – May 2026", title: "SRM Institute of Science and Technology, Chennai, TN", details: "GPA: 9.66 — SRMJEEE Rank: 183", icon: "🎓" },
+      { date: "Aug 2022 – May 2026", title: "SRM Institute of Science and Technology, Chennai, TN", details: "GPA: 9.0 — SRMJEEE Rank: 183", icon: "🎓" },
       { date: "May 2020 – June 2022", title: "Hiranandani Foundation School, Mumbai, MH", details: "ISC, Percentage: 72.8%", icon: "🏫" },
       { date: "April 2007 – April 2020", title: "DAV Public School, Thane, MH", details: "Percentage: 89%", icon: "📚" },
     ],
