@@ -7,36 +7,10 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Github, Linkedin, Mail, ChevronRight, Code, Server, Shield } from "lucide-react"
 import Image from 'next/image'
-import projectDescriptions from 'src/app/portfolio/project-description.json'
 
-interface Project {
-  name: string;
-  description: string;
-  link: string;
-  icon: JSX.Element;
-}
-
-interface TimelineItem {
-  date: string;
-  title?: string;
-  name?: string;
-  company?: string;
-  details?: string;
-  description?: string;
-  icon: string;
-}
-
-interface SkillCategory {
-  category: string;
-  items: string[];
-}
-
-export default function Portfolio() {
+export default function Portfolio() {  // <-- Default export here
   const [activeTab, setActiveTab] = useState("about")
   const [isScrolled, setIsScrolled] = useState(false)
-  const [projects, setProjects] = useState<Project[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,49 +20,7 @@ export default function Portfolio() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  useEffect(() => {
-    if (activeTab === 'projects') {
-      fetchProjects()
-    }
-  }, [activeTab])
-
-  const fetchProjects = async () => {
-    setIsLoading(true)
-    setError(null)
-    try {
-      const response = await fetch('https://api.github.com/users/prahacker/repos?sort=updated&direction=desc')
-      if (!response.ok) {
-        throw new Error('Failed to fetch projects')
-      }
-      const data = await response.json()
-      const formattedProjects = data.slice(0, 3).map((project: any) => ({
-        name: project.name,
-        description: projectDescriptions[project.name as keyof typeof projectDescriptions] || project.description || 'No description available',
-        link: project.html_url,
-        icon: getProjectIcon(project.language),
-      }))
-      setProjects(formattedProjects)
-    } catch (err) {
-      setError('Failed to load projects. Please try again later.')
-      console.error('Error fetching projects:', err)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const getProjectIcon = (language: string): JSX.Element => {
-    switch (language) {
-      case 'JavaScript':
-      case 'TypeScript':
-        return <Code className="w-10 h-10 text-yellow-400" />
-      case 'Python':
-        return <Server className="w-10 h-10 text-blue-400" />
-      default:
-        return <Shield className="w-10 h-10 text-green-400" />
-    }
-  }
-
-  const timelineData: Record<string, TimelineItem[]> = {
+  const timelineData = {
     education: [
       { date: "Aug 2022 – May 2026", title: "SRM Institute of Science and Technology, Chennai, TN", details: "GPA: 9.66 — SRMJEEE Rank: 183", icon: "🎓" },
       { date: "May 2020 – June 2022", title: "Hiranandani Foundation School, Mumbai, MH", details: "ISC, Percentage: 73%", icon: "🏫" },
@@ -107,14 +39,33 @@ export default function Portfolio() {
     ],
   }
 
-  const skills: SkillCategory[] = [
+  const projects = [
+    { name: "Portfolio Tracker", description: "Developed a ReactJS app to track daily portfolio P&L, integrated with Sensex and Nifty for comparison and holdings split visualisation. Used AWS RDS, NodeJS, ReactJS, Python and JWT.", link: "https://github.com/prahacker/PMS-react", icon: <Code className="w-10 h-10 text-blue-400" /> },
+    { name: "Directory Crawler", description: "Created a Python tool to search directories via command line, integrated with AWS S3 for cloud storage.", link: "https://github.com/prahacker/crawler", icon: <Server className="w-10 h-10 text-green-400" /> },
+    { name: "Jenkins Groovy Scripts", description: "Authored Jenkins scripts for Flutter and .NET applications with CD pipeline enhancements.", link: "https://github.com/prahacker/groovy-scripts", icon: <Shield className="w-10 h-10 text-purple-400" /> },
+  ]
+
+  const skills = [
     { category: "Languages", items: ["C++", "Python", "SQL", "Node.js"] },
     { category: "DevOps Tools", items: ["Jenkins", "Maven", "Ansible", "AWS", "Podman", "Terraform"] },
     { category: "Technologies", items: ["GitHub", "Linux", "Cloud Computing", "Containers", "Virtualization"] },
     { category: "Soft Skills", items: ["Problem Solving", "Teamwork", "Collaboration", "Time management", "Adaptability"] },
   ]
 
-  const TimelineItem: React.FC<{ item: TimelineItem; index: number }> = ({ item, index }) => {
+  interface TimelineItemProps {
+    item: {
+      title?: string;
+      name?: string;
+      date: string;
+      company?: string;
+      details?: string;
+      description?: string;
+      icon: string;
+    };
+    index: number;
+  }
+
+  const TimelineItem: React.FC<TimelineItemProps> = ({ item, index }) => {
     const isEven = index % 2 === 0;
     return (
       <motion.div
@@ -289,45 +240,39 @@ export default function Portfolio() {
 
               {activeTab === 'projects' && (
                 <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                  {isLoading ? (
-                    <p className="text-center col-span-3">Loading projects...</p>
-                  ) : error ? (
-                    <p className="text-center col-span-3 text-red-500">{error}</p>
-                  ) : (
-                    projects.map((project, index) => (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{
-                          opacity: 1,
-                          y: 0,
-                          transition: { delay: index * 0.1 }
-                        }}
-                      >
-                        <Card className="bg-gradient-to-br from-gray-800 to-gray-700 border-gray-600 h-full flex flex-col">
-                          <CardHeader>
-                            <div className="flex items-center justify-between">
-                              <CardTitle className="text-blue-400">{project.name}</CardTitle>
-                              {project.icon}
-                            </div>
-                          </CardHeader>
-                          <CardContent className="flex-grow">
-                            <p className="text-gray-300 mb-4">{project.description}</p>
-                            <motion.a
-                              href={project.link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-400 hover:underline inline-flex items-center mt-auto"
-                              whileHover={{ x: 5 }}
-                            >
-                              View Project
-                              <ChevronRight className="ml-1 h-4 w-4" />
-                            </motion.a>
-                          </CardContent>
-                        </Card>
-                      </motion.div>
-                    ))
-                  )}
+                  {projects.map((project, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                        transition: { delay: index * 0.1 }
+                      }}
+                    >
+                      <Card className="bg-gradient-to-br from-gray-800 to-gray-700 border-gray-600 h-full flex flex-col">
+                        <CardHeader>
+                          <div className="flex items-center justify-between">
+                            <CardTitle className="text-blue-400">{project.name}</CardTitle>
+                            {project.icon}
+                          </div>
+                        </CardHeader>
+                        <CardContent className="flex-grow">
+                          <p className="text-gray-300 mb-4">{project.description}</p>
+                          <motion.a
+                            href={project.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-400 hover:underline inline-flex items-center mt-auto"
+                            whileHover={{ x: 5 }}
+                          >
+                            View Project
+                            <ChevronRight className="ml-1 h-4 w-4" />
+                          </motion.a>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
                 </div>
               )}
 
