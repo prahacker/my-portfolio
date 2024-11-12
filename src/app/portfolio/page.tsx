@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Github, Linkedin, Mail, ChevronRight, Code, Server, Shield } from "lucide-react"
 import Image from 'next/image'
-import projectDescriptions from './project-descriptions.json'
+import projectDescriptions from 'src/app/portfolio/project-description.json'
 
 interface Project {
   name: string;
