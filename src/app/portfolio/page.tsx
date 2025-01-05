@@ -12,13 +12,23 @@ export default function Portfolio() {  // <-- Default export here
   const [activeTab, setActiveTab] = useState("about")
   const [isScrolled, setIsScrolled] = useState(false)
 
-  useEffect(() => {
-    const handleScroll = () => {
+ useEffect(() => {
+  let timeout: NodeJS.Timeout
+
+  const handleScroll = () => {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => {
       setIsScrolled(window.scrollY > 50)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    }, 200) // Delay state updates by 200ms
+  }
+
+  window.addEventListener('scroll', handleScroll)
+  return () => {
+    clearTimeout(timeout)
+    window.removeEventListener('scroll', handleScroll)
+  }
+}, [])
+
 
   const timelineData = {
     education: [
