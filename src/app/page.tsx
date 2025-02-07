@@ -1,116 +1,203 @@
-"use client";
+"use client"
 
-import { useState, useEffect, ReactNode } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useEffect } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Github, Linkedin, Mail, ChevronRight, Code, Server, Shield, Menu, X } from "lucide-react"
-import Image from 'next/image'
-import Head from 'next/head'
-
-interface TimelineItemType {
-  date: string;
-  title?: string;
-  name?: string;
-  details?: string;
-  company?: string;
-  description?: string;
-  icon: string;
-  image?: string;
-}
-
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  children: ReactNode;
-}
-
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
-  if (!isOpen) return null;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
-    >
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        className="bg-white rounded-lg p-6 max-w-3xl w-full relative"
-      >
-        <button
-          onClick={onClose}
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-          aria-label="Close modal"
-        >
-          <X className="h-6 w-6" />
-        </button>
-        {children}
-      </motion.div>
-    </motion.div>
-  );
-};
+import { Github, Linkedin, Mail, ChevronRight, Code, Server, Shield, X } from "lucide-react"
+import Image from "next/image"
+import type React from "react"
+import { ThemeProvider } from "@/providers/theme-provider"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export default function Portfolio() {
   const [activeTab, setActiveTab] = useState("about")
   const [isScrolled, setIsScrolled] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [selectedCertificate, setSelectedCertificate] = useState<TimelineItemType | null>(null)
+  const [selectedCertificate, setSelectedCertificate] = useState(null)
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
+    let lastScrollY = window.scrollY
+    let ticking = false
+
+    const updateScrollDir = () => {
+      const scrollY = window.scrollY
+
+      if (Math.abs(scrollY - lastScrollY) < 10) {
+        ticking = false
+        return
+      }
+
+      setIsScrolled(scrollY > 50)
+      lastScrollY = scrollY > 0 ? scrollY : 0
+      ticking = false
     }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateScrollDir)
+        ticking = true
+      }
+    }
+
+    window.addEventListener("scroll", onScroll)
+
+    return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
-  const timelineData: { education: TimelineItemType[], experience: TimelineItemType[], certifications: TimelineItemType[] } = {
+  const timelineData = {
     education: [
-      { date: "Aug 2022 – May 2026", title: "SRM Institute of Science and Technology, Chennai, TN", details: "GPA: 9.66 — SRMJEEE Rank: 183", icon: "🎓" },
-      { date: "May 2020 – June 2022", title: "Hiranandani Foundation School, Mumbai, MH", details: "ISC, Percentage: 72.8%", icon: "🏫" },
-      { date: "April 2007 – April 2020", title: "DAV Public School, Thane, MH", details: "Percentage: 89%", icon: "📚" },
+      {
+        date: "Aug 2022 – May 2026",
+        title: "SRM Institute of Science and Technology, Chennai, TN",
+        details: "GPA: 9.66 — SRMJEEE Rank: 183",
+        icon: "🎓",
+      },
+      {
+        date: "May 2020 – June 2022",
+        title: "Hiranandani Foundation School, Mumbai, MH",
+        details: "ISC, Percentage: 73%",
+        icon: "🏫",
+      },
+      {
+        date: "April 2007 – April 2020",
+        title: "DAV Public School, Thane, MH",
+        details: "Percentage: 89%",
+        icon: "📚",
+      },
     ],
     experience: [
-      { date: "June 2024 – July 2024", title: "DevOps Intern", company: "ICICI Bank, Mumbai", description: "Developed CI/CD pipelines using Jenkins for flutter app and also created diagrams for DevOps infrastructure.", icon: "🏦" },
-      { date: "June 2023 – July 2023", title: "Cyber Security Intern", company: "ProgIST, Mumbai", description: "Conducted security tests on applications including mobile app using various tools like burpsuite in virtual environment.", icon: "🔒" },
-      { date: "2019 – 2022", title: "Bug Bounty Hunter", company: "OpenBugBounty", description: "Collaborated with companies to resolve web vulnerabilities, enhancing security.", icon: "🐛" },
+      {
+        date: "December 2024 – January 2025",
+        title: "Baremetal Automation Intern",
+        company: "Tech Mahindra, Bangalore",
+        description: "Using ansible and redfish API to automate setup of OS and other systems on HP baremetal servers.",
+        icon: "🏦",
+      },
+      {
+        date: "June 2024 – July 2024",
+        title: "DevOps Intern",
+        company: "ICICI Bank, Mumbai",
+        description:
+          "Developed CI/CD pipelines using Jenkins for flutter app and also created diagrams for DevOps infrastructure.",
+        icon: "🏦",
+      },
+      {
+        date: "June 2023 – July 2023",
+        title: "Cyber Security Intern",
+        company: "ProgIST, Mumbai",
+        description:
+          "Conducted security tests on applications including mobile app using various tools like burpsuite in virtual environment.",
+        icon: "🔒",
+      },
+      {
+        date: "2019 – 2022",
+        title: "Bug Bounty Hunter",
+        company: "OpenBugBounty",
+        description: "Collaborated with companies to resolve web vulnerabilities, enhancing security.",
+        icon: "🐛",
+      },
     ],
     certifications: [
-      { date: "May 2024 – May 2027", name: "AWS Certified Cloud Practitioner", icon: "☁️", image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202024-09-12%20at%205.59.07%E2%80%AFPM-BOzqtDPZp93RXGni3e1QnvSaSVUm0w.png" },
-      { date: "Aug 2024 – Aug 2027", name: "Red Hat Certified Specialist in Containers", icon: "🐳", image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202024-09-12%20at%205.58.41%E2%80%AFPM-jExoB6jgW8oyjf6xYBjlOV09MYPkgM.png" },
-      { date: "Dec 2023 – Dec 2026", name: "Certified Ethical Hacker", icon: "🕵️", image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202024-09-12%20at%205.58.54%E2%80%AFPM-BthWDU0WQL3l3TQNFO9OD3pN4OdVBq.png" },
-      { date: "Dec 2023 – Dec 2026", name: "Red Hat Certified System Administrator", icon: "🖥️", image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202024-09-12%20at%205.58.27%E2%80%AFPM-ffHZqmm5jERV3UtA87YlX1lwoQ0P6k.png" },
+      {
+        name: "AWS Certified Solutions Architect - Associate",
+        date: "Jan 2025 – Jan 2028",
+        icon: "🏗️",
+        verificationUrl: "https://aws.amazon.com/verification",
+        verificationId: "44a39498180b4ad8a227a557a14f8b9b",
+        imageUrl:
+          "https://profileimagesfor.s3.ap-south-1.amazonaws.com/Screenshot+2025-02-07+at+1.37.19%E2%80%AFPM.png",
+        issueDate: "January 31, 2025",
+      },
+      {
+        name: "AWS Certified Cloud Practitioner",
+        date: "May 2024 – May 2027",
+        icon: "☁️",
+        verificationUrl: "https://aws.amazon.com/verification",
+        verificationId: "db76941f2a214be88ffd81f20e42511e",
+        imageUrl:
+          "https://profileimagesfor.s3.ap-south-1.amazonaws.com/Screenshot+2025-02-07+at+1.35.59%E2%80%AFPM.png",
+        issueDate: "May 31, 2024",
+      },
+      {
+        name: "Certified Ethical Hacker",
+        date: "Dec 2023 – Dec 2026",
+        icon: "🕵️",
+        imageUrl: "https://profileimagesfor.s3.ap-south-1.amazonaws.com/Screenshot+2025-02-07+at+1.36.42%E2%80%AFPM.png",
+        issueDate: "18 December, 2023",
+      },
+      {
+        name: "Red Hat Certified Specialist in Containers",
+        date: "Aug 2024 – Aug 2027",
+        icon: "🐳",
+        imageUrl: "https://profileimagesfor.s3.ap-south-1.amazonaws.com/Screenshot+2025-02-07+at+1.36.16%E2%80%AFPM.png",
+        issueDate: "August 08, 2024",
+      },
+      {
+        name: "Red Hat Certified System Administrator",
+        date: "Dec 2023 – Dec 2026",
+        icon: "🖥️",
+        imageUrl: "https://profileimagesfor.s3.ap-south-1.amazonaws.com/Screenshot+2025-02-07+at+1.36.59%E2%80%AFPM.png",
+        issueDate: "01 December, 2023",
+      },
     ],
   }
 
   const projects = [
-    { name: "Portfolio Tracker", description: "Developed a ReactJS app to track daily portfolio P&L, integrated with Sensex and Nifty for comparison and holdings split visualisation. Used AWS RDS, NodeJS, ReactJS, Python and JWT.", link: "https://github.com/prahacker/PMS-react", icon: <Code className="w-10 h-10 text-blue-400" /> },
-    { name: "Directory Crawler", description: "Created a Python tool to search directories via command line, integrated with AWS S3 for cloud storage.", link: "https://github.com/prahacker/crawler", icon: <Server className="w-10 h-10 text-green-400" /> },
-    { name: "Jenkins Groovy Scripts", description: "Authored Jenkins scripts for Flutter and .NET applications with CD pipeline enhancements.", link: "https://github.com/prahacker/groovy-scripts", icon: <Shield className="w-10 h-10 text-purple-400" /> },
+    {
+      name: "Portfolio Tracker",
+      description:
+        "Developed a ReactJS app to track daily portfolio P&L, integrated with Sensex and Nifty for comparison and holdings split visualisation. Used AWS RDS, NodeJS, ReactJS, Python and JWT.",
+      link: "https://github.com/prahacker/PMS-react",
+      icon: <Code className="w-10 h-10 text-blue-400" />,
+    },
+    {
+      name: "Directory Crawler",
+      description:
+        "Created a Python tool to search directories via command line, integrated with AWS S3 for cloud storage.",
+      link: "https://github.com/prahacker/crawler",
+      icon: <Server className="w-10 h-10 text-green-400" />,
+    },
+    {
+      name: "Jenkins Groovy Scripts",
+      description: "Authored Jenkins scripts for Flutter and .NET applications with CD pipeline enhancements.",
+      link: "https://github.com/prahacker/groovy-scripts",
+      icon: <Shield className="w-10 h-10 text-purple-400" />,
+    },
   ]
 
   const skills = [
     { category: "Languages", items: ["C++", "Python", "SQL", "Node.js"] },
     { category: "DevOps Tools", items: ["Jenkins", "Maven", "Ansible", "AWS", "Podman", "Terraform"] },
     { category: "Technologies", items: ["GitHub", "Linux", "Cloud Computing", "Containers", "Virtualization"] },
-    { category: "Soft Skills", items: ["Problem Solving", "Teamwork", "Collaboration", "Time management", "Adaptability"] },
+    {
+      category: "Soft Skills",
+      items: ["Problem Solving", "Teamwork", "Collaboration", "Time management", "Adaptability"],
+    },
   ]
 
-  const TimelineItem: React.FC<{ item: TimelineItemType; index: number }> = ({ item, index }) => {
+  interface TimelineItemProps {
+    item: {
+      title?: string
+      name?: string
+      date: string
+      company?: string
+      details?: string
+      description?: string
+      icon: string
+      verificationUrl?: string
+      verificationId?: string
+      imageUrl?: string
+      issueDate?: string
+    }
+    index: number
+  }
+
+  const TimelineItem: React.FC<TimelineItemProps> = ({ item, index }) => {
     const isEven = index % 2 === 0
     return (
-      <motion.div
-        className={`mb-8 flex justify-between items-center w-full ${isEven ? 'md:flex-row-reverse' : 'md:flex-row'} flex-col`}
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: index * 0.1 }}
-      >
-        <div className={`w-full md:w-5/12 ${isEven ? 'md:text-right' : 'md:text-left'} text-left`}>
+      <div className={`mb-8 flex justify-between items-center w-full ${isEven ? "flex-row-reverse" : "flex-row"}`}>
+        <div className={`w-5/12 ${isEven ? "text-right" : "text-left"}`}>
           <motion.div
             className="bg-gradient-to-r from-gray-800 to-gray-700 rounded-lg shadow-xl p-6"
             whileHover={{ scale: 1.03, boxShadow: "0 0 15px rgba(66, 153, 225, 0.5)" }}
@@ -121,41 +208,38 @@ export default function Portfolio() {
             {item.company && <p className="text-blue-400">{item.company}</p>}
             {item.details && <p className="text-gray-300 mt-2">{item.details}</p>}
             {item.description && <p className="text-gray-300 mt-2">{item.description}</p>}
-            {item.image && (
-              <Button
-                variant="ghost"
-                className="mt-4 text-blue-400 hover:text-blue-300"
+            {item.imageUrl && (
+              <button
                 onClick={() => setSelectedCertificate(item)}
+                className="mt-2 text-blue-400 hover:underline cursor-pointer"
               >
                 View Certificate
-              </Button>
+              </button>
             )}
           </motion.div>
         </div>
-        <div className="z-20 flex items-center order-1 bg-gradient-to-r from-blue-500 to-purple-500 shadow-xl w-12 h-12 rounded-full my-4 md:my-0">
+        <div className="z-20 flex items-center order-1 bg-gradient-to-r from-blue-500 to-purple-500 shadow-xl w-12 h-12 rounded-full">
           <h1 className="mx-auto text-2xl text-white">{item.icon}</h1>
         </div>
-        <div className="w-full md:w-5/12 hidden md:block"></div>
-      </motion.div>
+        <div className="w-5/12"></div>
+      </div>
     )
   }
 
   return (
-    <>
-      <Head>
-        <title>Prakhar | DevOps Wizard &#x1F9D9;&#x200D;&#x2642;&#xFE0F;</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </Head>
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-blue-900 text-white">
+    <ThemeProvider>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 text-gray-900 dark:text-white">
         <motion.header
-          className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-gray-900/80 backdrop-blur-md' : 'bg-transparent'}`}
+          className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+            isScrolled ? "bg-white/80 dark:bg-gray-900/80 backdrop-blur-md" : "bg-transparent"
+          }`}
           initial={{ y: -100 }}
           animate={{ y: 0 }}
-          transition={{ type: 'spring', stiffness: 120, damping: 20 }}
+          transition={{ type: "spring", stiffness: 120, damping: 20 }}
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <motion.h1
-              className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500"
+              className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-500"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
@@ -163,10 +247,14 @@ export default function Portfolio() {
               Prakhar
             </motion.h1>
             <nav className="hidden md:flex space-x-4">
-              {['about', 'education', 'experience', 'projects', 'certifications', 'skills'].map((item) => (
+              {["about", "education", "experience", "projects", "certifications", "skills"].map((item) => (
                 <motion.button
                   key={item}
-                  className={`text-sm font-medium ${activeTab === item ? 'text-blue-400' : 'text-gray-300 hover:text-white'}`}
+                  className={`text-sm font-medium ${
+                    activeTab === item
+                      ? "text-blue-600 dark:text-blue-400"
+                      : "text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                  }`}
                   onClick={() => setActiveTab(item)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -175,7 +263,8 @@ export default function Portfolio() {
                 </motion.button>
               ))}
             </nav>
-            <div className="flex space-x-2">
+            <div className="flex space-x-2 items-center">
+              <ThemeToggle />
               <motion.a
                 href="https://github.com/prahacker"
                 target="_blank"
@@ -183,7 +272,11 @@ export default function Portfolio() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
-                <Button variant="outline" size="icon" className="bg-transparent border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="bg-transparent border-gray-300 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white"
+                >
                   <Github className="h-4 w-4" />
                   <span className="sr-only">GitHub</span>
                 </Button>
@@ -195,102 +288,69 @@ export default function Portfolio() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
-                <Button variant="outline" size="icon" className="bg-transparent border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="bg-transparent border-gray-300 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white"
+                >
                   <Linkedin className="h-4 w-4" />
                   <span className="sr-only">LinkedIn</span>
                 </Button>
               </motion.a>
-              <motion.a
-                href="mailto:pbpmdst@gmail.com"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <Button variant="outline" size="icon" className="bg-transparent border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white">
+              <motion.a href="mailto:pbpmdst@gmail.com" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="bg-transparent border-gray-300 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white"
+                >
                   <Mail className="h-4 w-4" />
                   <span className="sr-only">Email</span>
                 </Button>
               </motion.a>
-              <motion.button
-                className="md:hidden"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <Menu className="h-6 w-6 text-gray-300" />
-              </motion.button>
             </div>
           </div>
-          {isMobileMenuOpen && (
-            <motion.div
-              className="md:hidden bg-gray-900 py-2"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-            >
-              {['about', 'education', 'experience', 'projects', 'certifications', 'skills'].map((item) => (
-                <motion.button
-                  key={item}
-                  className={`block w-full text-left px-4 py-2 text-sm font-medium ${activeTab === item ? 'text-blue-400' : 'text-gray-300 hover:text-white'}`}
-                  onClick={() => {
-                    setActiveTab(item)
-                    setIsMobileMenuOpen(false)
-                  }}
-                  whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
-                >
-                  {item.charAt(0).toUpperCase() + item.slice(1)}
-                </motion.button>
-              ))}
-            </motion.div>
-          )}
         </motion.header>
 
         <main className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
-            <motion.div
-              className="text-center mb-12"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <h2 className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">DevOps Engineer &amp; Cyber Security Enthusiast</h2>
-              <p className="text-xl text-gray-400">Passionate about building secure and scalable systems</p>
-            </motion.div>
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-500 dark:to-pink-500">
+                DevOps Engineer &amp; Cyber Security Enthusiast
+              </h2>
+              <p className="text-xl text-gray-600 dark:text-gray-400">
+                Passionate about building secure and scalable systems
+              </p>
+            </div>
 
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeTab}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                {activeTab === 'about' && (
+                {activeTab === "about" && (
                   <div className="grid md:grid-cols-2 gap-8 items-center">
-                    <motion.div
-                      initial={{ opacity: 0, x: -50 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.2 }}
-                    >
-                      <Card className="bg-gradient-to-br from-gray-800 to-gray-700 border-gray-600">
+                    <div>
+                      <Card className="bg-white dark:bg-gradient-to-br dark:from-gray-800 dark:to-gray-700 border-gray-200 dark:border-gray-600">
                         <CardHeader>
-                          <CardTitle className="text-2xl text-blue-400">About Me</CardTitle>
+                          <CardTitle className="text-2xl text-blue-600 dark:text-blue-400">About Me</CardTitle>
                         </CardHeader>
                         <CardContent>
-                          <p className="text-gray-300 mb-4">
-                            I&#39;m a passionate DevOps Engineer and Cyber Security Enthusiast with a strong foundation in cloud technologies and secure system design. My goal is to bridge the gap between development and operations while ensuring robust security measures are in place.
+                          <p className="text-gray-600 dark:text-gray-300 mb-4">
+                            I&apos;m a passionate DevOps Engineer and Cyber Security Enthusiast with a strong foundation
+                            in cloud technologies and secure system design. My goal is to bridge the gap between
+                            development and operations while ensuring robust security measures are in place.
                           </p>
-                          <p className="text-gray-300">
-                            With expertise in CI/CD pipelines, cloud infrastructure, and ethical hacking, I strive to create efficient, scalable, and secure solutions for modern software development challenges.
+                          <p className="text-gray-600 dark:text-gray-300">
+                            With expertise in CI/CD pipelines, cloud infrastructure, and ethical hacking, I strive to
+                            create efficient, scalable, and secure solutions for modern software development challenges.
                           </p>
                         </CardContent>
                       </Card>
-                    </motion.div>
-                    <motion.div
-                      className="relative rounded-lg overflow-hidden shadow-2xl"
-                      initial={{ opacity: 0, x: 50 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.4 }}
-                    >
+                    </div>
+                    <div className="relative rounded-lg overflow-hidden shadow-2xl">
                       <Image
                         src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/PHOTO-2024-09-11-19-10-23-P0TTCf3n3cxvMb1BR306HSbsMGYCcq.jpg"
                         alt="Prakhar at a festive event"
@@ -303,14 +363,17 @@ export default function Portfolio() {
                         <h3 className="text-xl font-bold mb-2">Embracing Culture and Technology</h3>
                         <p className="text-sm">Balancing traditional values with cutting-edge tech solutions</p>
                       </div>
-                    </motion.div>
+                    </div>
                   </div>
                 )}
 
-                {(activeTab === 'education' || activeTab === 'experience' || activeTab === 'certifications') && (
+                {(activeTab === "education" || activeTab === "experience" || activeTab === "certifications") && (
                   <div className="container mx-auto w-full h-full">
                     <div className="relative wrap overflow-hidden p-10 h-full">
-                      <div className="border-2-2 absolute border-opacity-20 border-gray-700 h-full border left-1/2 hidden md:block"></div>
+                      <div
+                        className="border-2-2 absolute border-opacity-20 border-gray-300 dark:border-gray-700 h-full border"
+                        style={{ left: "50%" }}
+                      ></div>
                       {timelineData[activeTab].map((item, index) => (
                         <TimelineItem key={index} item={item} index={index} />
                       ))}
@@ -318,29 +381,24 @@ export default function Portfolio() {
                   </div>
                 )}
 
-                {activeTab === 'projects' && (
+                {activeTab === "projects" && (
                   <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                     {projects.map((project, index) => (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                      >
-                        <Card className="bg-gradient-to-br from-gray-800 to-gray-700 border-gray-600 h-full flex flex-col">
+                      <div key={index}>
+                        <Card className="bg-white dark:bg-gradient-to-br dark:from-gray-800 dark:to-gray-700 border-gray-200 dark:border-gray-600 h-full flex flex-col">
                           <CardHeader>
                             <div className="flex items-center justify-between">
-                              <CardTitle className="text-blue-400">{project.name}</CardTitle>
+                              <CardTitle className="text-blue-600 dark:text-blue-400">{project.name}</CardTitle>
                               {project.icon}
                             </div>
                           </CardHeader>
                           <CardContent className="flex-grow">
-                            <p className="text-gray-300 mb-4">{project.description}</p>
+                            <p className="text-gray-600 dark:text-gray-300 mb-4">{project.description}</p>
                             <motion.a
                               href={project.link}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-blue-400 hover:underline inline-flex items-center mt-auto"
+                              className="text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center mt-auto"
                               whileHover={{ x: 5 }}
                             >
                               View Project
@@ -348,33 +406,27 @@ export default function Portfolio() {
                             </motion.a>
                           </CardContent>
                         </Card>
-                      </motion.div>
+                      </div>
                     ))}
                   </div>
                 )}
 
-                {activeTab === 'skills' && (
+                {activeTab === "skills" && (
                   <div className="grid gap-8 md:grid-cols-2">
                     {skills.map((skillCategory, index) => (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                      >
-                        <Card className="bg-gradient-to-br from-gray-800 to-gray-700 border-gray-600">
+                      <div key={index}>
+                        <Card className="bg-white dark:bg-gradient-to-br dark:from-gray-800 dark:to-gray-700 border-gray-200 dark:border-gray-600">
                           <CardHeader>
-                            <CardTitle className="text-blue-400">{skillCategory.category}</CardTitle>
+                            <CardTitle className="text-blue-600 dark:text-blue-400">{skillCategory.category}</CardTitle>
                           </CardHeader>
                           <CardContent>
                             <div className="flex flex-wrap gap-2">
                               {skillCategory.items.map((skill, skillIndex) => (
-                                <motion.div
-                                  key={skillIndex}
-                                  whileHover={{ scale: 1.05 }}
-                                  whileTap={{ scale: 0.95 }}
-                                >
-                                  <Badge variant="secondary" className="bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                                <motion.div key={skillIndex} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                  <Badge
+                                    variant="secondary"
+                                    className="bg-blue-50 text-blue-600 border border-blue-200 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20"
+                                  >
                                     {skill}
                                   </Badge>
                                 </motion.div>
@@ -382,7 +434,7 @@ export default function Portfolio() {
                             </div>
                           </CardContent>
                         </Card>
-                      </motion.div>
+                      </div>
                     ))}
                   </div>
                 )}
@@ -390,26 +442,55 @@ export default function Portfolio() {
             </AnimatePresence>
           </div>
         </main>
-      </div>
 
-      <Modal isOpen={!!selectedCertificate} onClose={() => setSelectedCertificate(null)}>
         {selectedCertificate && (
-          <div className="text-center">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">{selectedCertificate.name}</h2>
-            {selectedCertificate.image ? (
-              <Image
-                src={selectedCertificate.image}
-                alt={selectedCertificate.name || "Certificate"}
-                width={800}
-                height={600}
-                className="mx-auto"
-              />
-            ) : (
-              <p>No image available for this certificate</p>
-            )}
+          <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+            <div className="bg-white dark:bg-[#1b2b3a] p-8 rounded-lg max-w-2xl w-full relative">
+              <button
+                onClick={() => setSelectedCertificate(null)}
+                className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 dark:hover:text-white"
+              >
+                <X className="h-6 w-6" />
+              </button>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white text-center mb-8">
+                {selectedCertificate.name}
+              </h2>
+              <div className="mb-8">
+                <Image
+                  src={selectedCertificate.imageUrl || "/placeholder.svg"}
+                  alt={selectedCertificate.name}
+                  width={800}
+                  height={600}
+                  className="w-full h-auto rounded-lg"
+                />
+              </div>
+              {selectedCertificate.verificationId && (
+                <div className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 mb-4">
+                  <p className="text-gray-600 dark:text-gray-300 mb-2">
+                    VALIDATION NUMBER: {selectedCertificate.verificationId}
+                  </p>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    VALIDATE AT:{" "}
+                    <a
+                      href={selectedCertificate.verificationUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 dark:text-blue-400 hover:underline"
+                    >
+                      {selectedCertificate.verificationUrl}
+                    </a>
+                  </p>
+                </div>
+              )}
+              <div className="text-gray-600 dark:text-gray-300">
+                <p>Issue Date: {selectedCertificate.issueDate || "Not specified"}</p>
+                <p>Expiration Date: {selectedCertificate.date.split("–")[1].trim()}</p>
+              </div>
+            </div>
           </div>
         )}
-      </Modal>
-    </>
+      </div>
+    </ThemeProvider>
   )
 }
+
