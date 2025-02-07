@@ -14,7 +14,20 @@ import { ThemeToggle } from "@/components/theme-toggle"
 export default function Portfolio() {
   const [activeTab, setActiveTab] = useState("about")
   const [isScrolled, setIsScrolled] = useState(false)
-  const [selectedCertificate, setSelectedCertificate] = useState(null)
+  const [selectedCertificate, setSelectedCertificate] = useState<{
+  title?: string;
+  name?: string;
+  date: string;
+  company?: string;
+  details?: string;
+  description?: string;
+  icon: string;
+  verificationUrl?: string;
+  verificationId?: string;
+  imageUrl?: string;
+  issueDate?: string;
+} | null>(null);
+
 
   useEffect(() => {
     let lastScrollY = window.scrollY
