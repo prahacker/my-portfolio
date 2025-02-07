@@ -470,12 +470,13 @@ export default function Portfolio() {
               </h2>
               <div className="mb-8">
                 <Image
-                  src={selectedCertificate.imageUrl || "/placeholder.svg"}
-                  alt={selectedCertificate.name}
+                  src={selectedCertificate?.imageUrl || "/placeholder.svg"}
+                  alt={selectedCertificate?.name || "Certificate Image"}
                   width={800}
                   height={600}
                   className="w-full h-auto rounded-lg"
                 />
+
               </div>
               {selectedCertificate.verificationId && (
                 <div className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 mb-4">
