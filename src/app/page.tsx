@@ -113,9 +113,19 @@ export default function Portfolio() {
     ],
     certifications: [
       {
+        name: "Certified Kubernetes Application Developer",
+        date: "Feb 2025 – Feb 2027",
+        icon: "☸️",
+        verificationUrl: "https://www.credly.com/badges/3b688178-22ee-4f7f-aa9e-7e9c00daa5bf/public_url",
+        verificationId: "LF-ej882dgrdh",
+        imageUrl:
+          "https://profileimagesfor.s3.ap-south-1.amazonaws.com/Screenshot+2025-02-24+at+9.46.54%E2%80%AFPM.png",
+        issueDate: "February 22, 2025",
+      },
+      {
         name: "AWS Certified Solutions Architect - Associate",
         date: "Jan 2025 – Jan 2028",
-        icon: "🏗️",
+        icon: "🏗",
         verificationUrl: "https://aws.amazon.com/verification",
         verificationId: "44a39498180b4ad8a227a557a14f8b9b",
         imageUrl:
