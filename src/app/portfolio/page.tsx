@@ -5,11 +5,20 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Github, Linkedin, Mail, ChevronRight, Code, Server, Shield } from "lucide-react"
+import { Github, Linkedin, Mail, ChevronRight, Code, Server, Shield, User, BookOpen, Briefcase, LayoutGrid, Award, Settings2 } from "lucide-react"
 import Image from "next/image"
 
+// Icon mapping for tab names
+const tabIcons = {
+  about: <User className="h-5 w-5 mb-0.5" />,
+  education: <BookOpen className="h-5 w-5 mb-0.5" />,
+  experience: <Briefcase className="h-5 w-5 mb-0.5" />,
+  projects: <LayoutGrid className="h-5 w-5 mb-0.5" />,
+  certifications: <Award className="h-5 w-5 mb-0.5" />,
+  skills: <Settings2 className="h-5 w-5 mb-0.5" />,
+}
+
 export default function Portfolio() {
-  // <-- Default export here
   const [activeTab, setActiveTab] = useState("about")
   const [isScrolled, setIsScrolled] = useState(false)
 
@@ -167,6 +176,16 @@ export default function Portfolio() {
     )
   }
 
+  // --- All Tabs (order, label) ---
+  const TABS = [
+    { key: "about", label: "About" },
+    { key: "education", label: "Education" },
+    { key: "experience", label: "Experience" },
+    { key: "projects", label: "Projects" },
+    { key: "certifications", label: "Certs" },
+    { key: "skills", label: "Skills" },
+  ]
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-blue-900 text-white">
       <motion.header
@@ -184,16 +203,19 @@ export default function Portfolio() {
           >
             Prakhar
           </motion.h1>
+          {/* Top nav: Desktop only */}
           <nav className="hidden md:flex space-x-4">
-            {["about", "education", "experience", "projects", "certifications", "skills"].map((item) => (
+            {TABS.map((tab) => (
               <motion.button
-                key={item}
-                className={`text-sm font-medium ${activeTab === item ? "text-blue-400" : "text-gray-300 hover:text-white"}`}
-                onClick={() => setActiveTab(item)}
+                key={tab.key}
+                className={`text-sm font-medium px-2 py-1 rounded transition-colors duration-150
+                  ${activeTab === tab.key ? "text-blue-400 bg-blue-900/40" : "text-gray-300 hover:text-white"}
+                `}
+                onClick={() => setActiveTab(tab.key)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                {item.charAt(0).toUpperCase() + item.slice(1)}
+                {tab.label}
               </motion.button>
             ))}
           </nav>
@@ -242,9 +264,27 @@ export default function Portfolio() {
             </motion.a>
           </div>
         </div>
+        {/* Mobile nav: Bottom tab bar */}
+        <nav className="flex md:hidden justify-between px-2 border-t border-gray-700 bg-gray-900/95 fixed bottom-0 left-0 right-0 z-50 h-14 shadow-inner backdrop-blur-lg">
+          {TABS.map((tab) => (
+            <button
+              key={tab.key}
+              className={`flex flex-col items-center justify-center flex-1 py-1 text-xs font-semibold transition-all duration-150
+                ${activeTab === tab.key
+                  ? "text-blue-400"
+                  : "text-gray-300 hover:text-white"
+                }
+              `}
+              onClick={() => setActiveTab(tab.key)}
+            >
+              {tabIcons[tab.key]}
+              <span>{tab.label}</span>
+            </button>
+          ))}
+        </nav>
       </motion.header>
 
-      <main className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+      <main className="pt-24 pb-20 px-4 sm:px-6 lg:px-8"> {/* pb-20 for mobile nav overlap */}
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
@@ -376,4 +416,3 @@ export default function Portfolio() {
     </div>
   )
 }
-
