@@ -9,25 +9,36 @@ import { Github, Linkedin, Mail, ChevronRight, Code, Server, Shield, X, Menu } f
 import Image from "next/image";
 import { ThemeToggle } from "@/components/theme-toggle";
 
+/** ---------- Types ---------- */
+type TabKey = "about" | "education" | "experience" | "projects" | "certifications" | "skills";
+
+type TimelineEntry = {
+  title?: string;
+  name?: string;
+  date: string;
+  company?: string;
+  details?: string;
+  description?: string;
+  icon: string;
+  verificationUrl?: string;
+  verificationId?: string;
+  imageUrl?: string;
+  issueDate?: string;
+};
+
+type TimelineTabs = "education" | "experience" | "certifications";
+
+/** Type guard for timeline tabs */
+const isTimelineTab = (t: TabKey): t is TimelineTabs =>
+  t === "education" || t === "experience" || t === "certifications";
+
 export default function Portfolio() {
-  const [activeTab, setActiveTab] = useState("about");
+  const [activeTab, setActiveTab] = useState<TabKey>("about");
   const [isScrolled, setIsScrolled] = useState(false);
-  const [selectedCertificate, setSelectedCertificate] = useState<{
-    title?: string;
-    name?: string;
-    date: string;
-    company?: string;
-    details?: string;
-    description?: string;
-    icon: string;
-    verificationUrl?: string;
-    verificationId?: string;
-    imageUrl?: string;
-    issueDate?: string;
-  } | null>(null);
+  const [selectedCertificate, setSelectedCertificate] = useState<TimelineEntry | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const navLinks = ["about", "education", "experience", "projects", "certifications", "skills"];
+  const navLinks: TabKey[] = ["about", "education", "experience", "projects", "certifications", "skills"];
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -35,12 +46,10 @@ export default function Portfolio() {
 
     const updateScrollDir = () => {
       const scrollY = window.scrollY;
-
       if (Math.abs(scrollY - lastScrollY) < 10) {
         ticking = false;
         return;
       }
-
       setIsScrolled(scrollY > 50);
       lastScrollY = scrollY > 0 ? scrollY : 0;
       ticking = false;
@@ -57,7 +66,7 @@ export default function Portfolio() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const timelineData = {
+  const timelineData: Record<TimelineTabs, TimelineEntry[]> = {
     education: [
       {
         date: "Aug 2022 – May 2026",
@@ -84,23 +93,21 @@ export default function Portfolio() {
         title: "Research Intern",
         company: "TCS Research and Innovation, Chennai",
         description:
-          "Engineered an application to track produce from its origin using Vision-Language Models (VLMs) and LLMs , deployed on AWS for scalability and high availability. Worked on Molecular dynamics simulation for testing cutting edge technology.",
+          "Engineered an application to track produce from its origin using VLMs and LLMs, deployed on AWS for scalability and high availability. Worked on molecular dynamics simulation for testing cutting-edge technology.",
         icon: "🔬",
       },
       {
         date: "December 2024 – January 2025",
         title: "Baremetal Automation Intern",
         company: "Tech Mahindra, Bangalore",
-        description:
-          "Using ansible and redfish API to automate setup of OS and other systems on HP baremetal servers.",
+        description: "Using Ansible and Redfish API to automate setup of OS and other systems on HP baremetal servers.",
         icon: "🏦",
       },
       {
         date: "June 2024 – July 2024",
         title: "DevOps Intern",
         company: "ICICI Bank, Mumbai",
-        description:
-          "Developed CI/CD pipelines using Jenkins for flutter app and also created diagrams for DevOps infrastructure.",
+        description: "Developed CI/CD pipelines using Jenkins for Flutter app and created diagrams for DevOps infrastructure.",
         icon: "🏦",
       },
       {
@@ -108,7 +115,7 @@ export default function Portfolio() {
         title: "Cyber Security Intern",
         company: "ProgIST, Mumbai",
         description:
-          "Conducted security tests on applications including mobile app using various tools like burpsuite in virtual environment.",
+          "Conducted security tests on applications including mobile app using various tools like Burp Suite in virtual environment.",
         icon: "🔒",
       },
       {
@@ -217,19 +224,7 @@ export default function Portfolio() {
   ];
 
   interface TimelineItemProps {
-    item: {
-      title?: string;
-      name?: string;
-      date: string;
-      company?: string;
-      details?: string;
-      description?: string;
-      icon: string;
-      verificationUrl?: string;
-      verificationId?: string;
-      imageUrl?: string;
-      issueDate?: string;
-    };
+    item: TimelineEntry;
     index: number;
   }
 
@@ -459,15 +454,15 @@ export default function Portfolio() {
                 </div>
               )}
 
-              {(activeTab === "education" || activeTab === "experience" || activeTab === "certifications") && (
+              {isTimelineTab(activeTab) && (
                 <div className="container mx-auto w-full h-full">
                   <div className="relative wrap overflow-hidden p-10 h-full">
                     <div
                       className="border-2-2 absolute border-opacity-20 border-gray-300 dark:border-gray-700 h-full border"
                       style={{ left: "50%" }}
                     ></div>
-                    {timelineData[activeTab as "education" | "experience" | "certifications"].map((item, index) => (
-                      <TimelineItem key={index} item={item as any} index={index} />
+                    {timelineData[activeTab].map((item, index) => (
+                      <TimelineItem key={index} item={item} index={index} />
                     ))}
                   </div>
                 </div>
