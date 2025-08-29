@@ -81,6 +81,14 @@ export default function Portfolio() {
     ],
     experience: [
       {
+        date: "May 2026 – Aug 2026",
+        title: "Research Intern",
+        company: "TCS Research and Innovation, Chennai",
+        description:
+          "Engineered an application to track produce from its origin using Vision-Language Models (VLMs) and LLMs , deployed on AWS for scalability and high availability. Worked on Molecular dynamics simulation for testing cutting edge technology.",
+        icon: "🔬",
+      },
+      {
         date: "December 2024 – January 2025",
         title: "Baremetal Automation Intern",
         company: "Tech Mahindra, Bangalore",
@@ -111,7 +119,15 @@ export default function Portfolio() {
         icon: "🐛",
       },
     ],
+    
     certifications: [
+      {
+        name: "Red Hat Certified OpenShift Administrator",
+        date: "May 2025 – May 2028",
+        icon: "📦",
+        imageUrl: "https://profileimagesfor.s3.ap-south-1.amazonaws.com/Screenshot+2025-08-29+at+11.50.17%E2%80%AFPM.png",   // replace with certificate screenshot
+        issueDate: "August 2024",
+      },
       {
         name: "Certified Kubernetes Application Developer",
         date: "Feb 2025 – Feb 2027",
@@ -158,7 +174,7 @@ export default function Portfolio() {
       },
       {
         name: "Red Hat Certified System Administrator",
-        date: "Dec 2023 – Dec 2026",
+        date: "Dec 2023 – May 2028",
         icon: "🖥️",
         imageUrl: "https://profileimagesfor.s3.ap-south-1.amazonaws.com/Screenshot+2025-02-07+at+1.36.59%E2%80%AFPM.png",
         issueDate: "01 December, 2023",
