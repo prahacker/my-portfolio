@@ -63,7 +63,7 @@ export default function Portfolio() {
       {
         date: "Aug 2022 – May 2026",
         title: "SRM Institute of Science and Technology, Chennai, TN",
-        details: "GPA: 9.66 — SRMJEEE Rank: 183",
+        details: "GPA: 9.64 — SRMJEEE Rank: 183",
         icon: "🎓",
       },
       {
