@@ -26,11 +26,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <head />
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        {/* Omit defaultTheme to avoid the type error; Next-Themes defaults to "system" */}
+        <ThemeProvider attribute="class" enableSystem>
           {children}
         </ThemeProvider>
 
-        {/* Google Analytics (scripts in body for Next App Router) */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-3N4CYNHCC4"
           strategy="afterInteractive"
